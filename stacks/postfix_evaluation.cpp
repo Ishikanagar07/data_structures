@@ -1,158 +1,96 @@
+/*
+  Evaluation Of postfix Expression in C++ 
+  Input Postfix expression must be in a desired format. 
+  Operands must be single-digit integers and there should be space in between two operands.
+  Only '+'  ,  '-'  , '*' and '/'  operators are expected. 
+*/
 #include<iostream>
 #include<stack>
 #include<string>
+
 using namespace std;
 
-bool IsOperand(char ch)
-{
-    if ((ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')) {
-        return true;
-    }
-    return false;
-}
+// Function to evaluate Postfix expression and return output
+int EvaluatePostfix(string expression);
 
+// Function to perform an operation and return output. 
+int PerformOperation(char operation, int operand1, int operand2);
 
-bool IsOperator(char C)
-{
-    if (C == '+' || C == '-' || C == '*' || C == '/' || C == '^') {
-        return true;
-    }
-    return false;
-}
+// Function to verify whether a character is operator symbol or not. 
+bool IsOperator(char C);
 
-
-bool IsLeftParenthesis(char ch)
-{
-    if (ch == '(') {
-        return true;
-    }
-    return false;
-}
-
-
-bool IsRightParenthesis(char ch)
-{
-    if (ch == ')') {
-        return true;
-    }
-    return false;
-}
-
-bool Flag(char ch)
-{
-    if (!IsOperand(ch) || !IsOperator(ch) || !IsLeftParenthesis(ch) || !IsRightParenthesis(ch)) {
-        return false;
-    }
-    return true;
-}
-
-
-int IsRightAssociative(char op)
-{
-    if (op == '^') {
-        return true;
-    }
-    return false;
-}
-
-
-int GetOperatorWeight(char op)
-{
-    int weight = -1;
-    switch (op) {
-        
-        case '+':
-        case '-':
-            weight = 1;
-            break;
-            
-        case '*':
-        case '/':
-            weight = 2;
-            break;
-            
-        case '^':
-            weight = 3;
-            break;
-    }
-    return weight;
-}
-
-
-bool HasHigherPrecedence(char op1, char op2)
-{
-    int op1Weight = GetOperatorWeight(op1);
-    int op2Weight = GetOperatorWeight(op2);
-
-    // If operators have equal precedence, return true if they are left associative.
-    // BUT REMEMBER...return false, if right associative.
-    // if operator is left-associative, left one should be given priority.
-    if (op1Weight == op2Weight) {
-        if (IsRightAssociative(op1)) {
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
-    return op1Weight > op2Weight ? true : false;
-}
-
-
-string InfixToPostfix(string expression)
-{
-    stack<char> S;
-    string postfix = "";
-    
-    for (auto& elem : expression) {
-        
-        if (Flag(elem)) {
-            continue;
-        }
-        
-        // If character is operator, pop two elements from stack, perform operation and push the result back.
-        else if (IsOperator(elem)) {
-            while (!S.empty() && S.top() != '(' && HasHigherPrecedence(S.top(), elem)) {
-                postfix += S.top();
-                S.pop();
-            }
-            S.push(elem);
-        }
-        
-        else if (IsOperand(elem)) {
-            postfix += elem;
-        }
-        
-        else if (elem == '(') {
-            S.push(elem);
-        }
-        
-        else if (elem == ')') {
-            while (!S.empty() && S.top() != '(') {
-                postfix += S.top();
-                S.pop();
-            }
-            S.pop();
-        }
-    }
-
-    while (!S.empty()) {
-        postfix += S.top();
-        S.pop();
-    }
-
-    return postfix;
-}
-
+// Function to verify whether a character is numeric digit. 
+bool IsNumericDigit(char C);
 
 int main() 
 {
 	string expression; 
-	cout<<"Enter Infix Expression \n";
+	cout<<"Enter Postfix Expression \n";
 	getline(cin,expression);
-	string postfix = InfixToPostfix(expression);
-	cout<<"Output = "<<postfix<<"\n";
+	int result = EvaluatePostfix(expression);
+	cout<<"Output = "<<result<<"\n";
 }
 
+// Function to evaluate Postfix expression and return output
+int EvaluatePostfix(string expression)
+{
+	// Declaring a Stack from Standard template library in C++. 
+	stack<int> S;
 
-//source => mycodeschool
+	for(int i = 0;i< expression.length();i++) {
+
+		// Scanning each character from left. 
+		// If character is a delimitter, move on. 
+		if(expression[i] == ' ' || expression[i] == ',') continue; 
+
+		// If character is operator, pop two elements from stack, perform operation and push the result back. 
+		else if(IsOperator(expression[i])) {
+			// Pop two operands. 
+			int operand2 = S.top(); S.pop();
+			int operand1 = S.top(); S.pop();
+			// Perform operation
+			int result = PerformOperation(expression[i], operand1, operand2);
+			//Push back result of operation on stack. 
+			S.push(result);
+		}
+		else if(IsNumericDigit(expression[i])){
+		    int operand;
+		    operand = expression[i] - '0';
+		
+			// Push operand on stack. 
+			S.push(operand);
+		}
+	}
+	// If expression is in correct format, Stack will finally have one element. This will be the output. 
+	return S.top();
+}
+
+// Function to verify whether a character is numeric digit. 
+bool IsNumericDigit(char C) 
+{
+	if(C >= '0' && C <= '9') return true;
+	return false;
+}
+
+// Function to verify whether a character is operator symbol or not. 
+bool IsOperator(char C)
+{
+	if(C == '+' || C == '-' || C == '*' || C == '/')
+		return true;
+
+	return false;
+}
+
+// Function to perform an operation and return output. 
+int PerformOperation(char operation, int operand1, int operand2)
+{
+	if(operation == '+') return operand1 +operand2;
+	else if(operation == '-') return operand1 - operand2;
+	else if(operation == '*') return operand1 * operand2;
+	else if(operation == '/') return operand1 / operand2;
+
+	else cout<<"Unexpected Error \n";
+	return -1; 
+}
+
+//source => mycodeschool (some changes made as the original code had some errors)
