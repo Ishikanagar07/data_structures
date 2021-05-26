@@ -95,3 +95,18 @@ int PerformOperation(char operation, int operand1, int operand2)
 
 //source => mycodeschool (some changes made as the original code had some errors)
 // here we are only considering single-digit integers, because if we start considering integers > 9 then 2 single-digit integer might get interpreted as 1 two-digit integer and we will get segmentaion error (because PerformOperation function is expecting two integers in stack whereas only 1 is found)
+
+
+/*
+char in C++ evaluates to the decimal equivalent.
+
+'0' is 48
+
+lets say expression[i] = '2' which evaluates to 50
+
+so (expression[i] - '0') in this case will be (50 - 48) = 2
+
+This is basically a little valid hack to convert from char to int in c++
+
+expression[i] - '0' is just a way to convert from char to int.
+*/
