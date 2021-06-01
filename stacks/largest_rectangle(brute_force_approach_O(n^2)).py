@@ -31,4 +31,4 @@ print("largest rectangle/ max area : " + str(max(area)))
 # Logic used => atleast one rectangle will be fully included in the largest rectangle 
 # for explanation refer https://www.youtube.com/watch?v=vcv3REtIvEo
 # brute force approach
-# time complexity => O(n)
+# time complexity => O(n^2)
