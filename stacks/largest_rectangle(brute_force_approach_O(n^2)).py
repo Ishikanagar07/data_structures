@@ -1,29 +1,29 @@
-h = [3,5,1,4]
-w = []
-l = len(h)
+height = [3,5,1,4]
+width = []
+l = len(height)
 
 for i in range(l):
     lptr,rptr,lcount,rcount = 0,0,0,0
 
-    if i != 0:
+    if (i != 0):
         lptr = i-1
 
-        while(lptr != -1 and h[lptr] >= h[i]):
+        while(lptr != -1 and height[lptr] >= height[i]):
             lcount += 1
             lptr -= 1
             
     
-    if i != l-1:
+    if (i != l-1):
         rptr = i + 1
 
-        while(rptr != l and h[rptr] >= h[i]):
+        while(rptr != l and height[rptr] >= height[i]):
             rcount += 1
             rptr += 1
             
-    w.append(lcount+rcount+1)
+    width.append(lcount+rcount+1)
 
-print("height: " + str(h))
-print("width: " + str(w))
+print("height: " + str(height))
+print("width: " + str(width))
 area = [h[i]*w[i] for i in range(l)]
 print("area: " + str(area))
 print("largest rectangle/ max area : " + str(max(area)))
