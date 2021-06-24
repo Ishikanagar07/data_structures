@@ -24,11 +24,8 @@ class Solution {
         int maxSum = Integer.MIN_VALUE;
         int smLevel = 1;
         
-        while(true){
+        while(!q.isEmpty()){
             int size = q.size();
-            if(size == 0){
-                break;
-            }
             int sum = 0;
             while(size > 0){
                 TreeNode temp = q.remove();
